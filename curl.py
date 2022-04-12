@@ -51,6 +51,7 @@ def linuX(endPoint, banner):
         print(banner + Fore.GREEN + webFile)
 
         if webFile[-1] == "/":                                               # Checking if it's a directory                       
+            
             # Linux format for creating file with Back Slashes
             DIR = webFile.replace("\'", "\\'")
             DIR = webFile.replace("$","\$")                                
@@ -71,13 +72,14 @@ def linuX(endPoint, banner):
                 for xy in range(0, len(endPointSplit)-1 ,1):
                     ENDPOINT += endPointSplit[xy]+"\ "
                 ENDPOINT += endPointSplit[-1]
-            ENDPOINT = ENDPOINT.replace("(","\(").replace(")","\)")
+            ENDPOINT = ENDPOINT.replace("(","\(").replace(")","\)").replace("$","\$")
+
             DIR = DIR.replace("(","\(").replace(")","\)")
             os.popen("mkdir "+dst+"/"+ENDPOINT+DIR)
             r = linuX(endPoint+webFile,banner[:-4]+"    |___")
             
         else:
-            print("DST - {} / endpoint - {} webFile - {}".format(dst, endPoint[len(serverURL):], webFile))
+            #print("DST - {} / endpoint - {} webFile - {}".format(dst, endPoint[len(serverURL):], webFile))
             data = open(dst+"/"+endPoint[len(serverURL):]+webFile, "wb")
             fileData = requests.get(endPoint+webFile, allow_redirects=True)
             data.write(fileData.content)
