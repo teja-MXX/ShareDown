@@ -46,33 +46,40 @@ def linuX(endPoint, banner):
     resp = resp.text.split("\n")                 
     resp = list(map(unquote, resp[10:-5]))                                #URL decoding using unquote
     resp = list(map(formatFiles,resp))
-    for dir in resp:
+    for webFile in resp:
         
-        print(banner + Fore.GREEN + dir)
+        print(banner + Fore.GREEN + webFile)
 
-        if dir[-1] == "/":                                    
-            dirr = dir.replace("\'", "\\'")
-            if(len(dir.split(" ")) != 1):
-                dirSplit = dir.replace("\'", "\\'").split(" ")                                          
-                dirr = ""
+        if webFile[-1] == "/":                                               # Checking if it's a directory                       
+            # Linux format for creating file with Back Slashes
+            DIR = webFile.replace("\'", "\\'")
+            DIR = webFile.replace("$","\$")                                
+            
+            # If Name of the directory has spaces
+            if(len(webFile.split(" ")) != 1):                                
+                # If Name of the directory has Single and Double Quotes
+                dirSplit = webFile.replace("\'", "\\'").split(" ")                                          
+                DIR = ""
                 for x in range(0, len(dirSplit)-1 ,1):
-                    dirr += dirSplit[x]+"\ "
-                dirr += dirSplit[-1]
-            
+                    DIR += dirSplit[x]+"\ "
+                DIR += dirSplit[-1]
+    
             endPointSplit = endPoint[len(serverURL):].replace("\'", "\\'").split(" ")
-            rendPoint= endPoint[len(serverURL):].replace("\'", "\\'")
+            ENDPOINT= endPoint[len(serverURL):].replace("\'", "\\'")
             if(len(endPointSplit) !=1):
-                rendPoint = ""
+                ENDPOINT = ""
                 for xy in range(0, len(endPointSplit)-1 ,1):
-                    rendPoint += endPointSplit[xy]+"\ "
-                rendPoint += endPointSplit[-1]
-            
-            os.popen("mkdir "+dst+"/"+rendPoint+dirr)
-            r = linuX(endPoint+dir,banner[:-4]+"    |___")
+                    ENDPOINT += endPointSplit[xy]+"\ "
+                ENDPOINT += endPointSplit[-1]
+            ENDPOINT = ENDPOINT.replace("(","\(").replace(")","\)")
+            DIR = DIR.replace("(","\(").replace(")","\)")
+            os.popen("mkdir "+dst+"/"+ENDPOINT+DIR)
+            r = linuX(endPoint+webFile,banner[:-4]+"    |___")
             
         else:
-            data = open(dst+"/"+endPoint[len(serverURL):]+dir, "wb")
-            fileData = requests.get(endPoint+dir, allow_redirects=True)
+            print("DST - {} / endpoint - {} webFile - {}".format(dst, endPoint[len(serverURL):], webFile))
+            data = open(dst+"/"+endPoint[len(serverURL):]+webFile, "wb")
+            fileData = requests.get(endPoint+webFile, allow_redirects=True)
             data.write(fileData.content)
             data.close()
             
@@ -86,13 +93,13 @@ def winDows(endPoint, banner):
     resp = list(map(formatFiles,resp))
 
     
-    for dir in resp:
-        if(dir[-1] == "/"):
-            os.popen("mkdir "+dst+"\\"+endPoint[len(serverURL):]+dir)
-            r = winDows(endPoint+dir, banner[:-4]+"    |___")
+    for webFile in resp:
+        if(webFile[-1] == "/"):
+            os.popen("mkdir "+dst+"\\"+endPoint[len(serverURL):]+webFile)
+            r = winDows(endPoint+webFile, banner[:-4]+"    |___")
         else:
-            data = open(dst+"/"+endPoint[len(serverURL):]+dir, "wb")
-            fileData = requests.get(endPoint+dir, allow_redirects=True)
+            data = open(dst+"/"+endPoint[len(serverURL):]+webFile, "wb")
+            fileData = requests.get(endPoint+webFile, allow_redirects=True)
             data.write(fileData.content)
             data.close()
     
